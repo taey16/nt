@@ -1,2 +1,2 @@
-# nt-v0.0.1
+# nt
 Image to language description
