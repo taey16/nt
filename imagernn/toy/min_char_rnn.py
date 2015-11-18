@@ -1,6 +1,6 @@
+
 import numpy as np
 import sys
-import matplotlib.pyplot as plt
 import time
 import cPickle
 import scipy.io as sio
@@ -31,7 +31,8 @@ def lossFun(inputs, targets, hprev):
 
   # backward pass: compute gradients going backwards
   # memory variables for derivatives
-  dWxh, dWhh, dWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
+  dWxh, dWhh, dWhy = \
+    np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
   dbh, dby = np.zeros_like(bh), np.zeros_like(by)
   dhnext = np.zeros_like(hs[0])
   for t in reversed(range(len(inputs))):
@@ -133,7 +134,8 @@ if __name__ == '__main__':
   bh = np.zeros((hidden_size,1)).astype(np.float32)
   by = np.zeros((vocab_size, 1)).astype(np.float32)
   # memory variables for Adagrad
-  mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
+  mWxh, mWhh, mWhy = \
+    np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
   mbh, mby = np.zeros_like(bh), np.zeros_like(by)
 
   n, p, cum_p = 0, 0, 0
@@ -144,7 +146,8 @@ if __name__ == '__main__':
 
   # start to train
   while True:
-    # prepare inputs (we're sweeping from left to right in steps seq_length long)
+    # prepare inputs 
+    # (we're sweeping from left to right in steps seq_length long)
     if p+seq_length+1 >= len(data) or n == 0: 
       # reset RNN memory
       hprev = np.zeros((hidden_size,1))
@@ -161,11 +164,14 @@ if __name__ == '__main__':
       #gradCheck(inputs, targets, hprev)
 
     # forward seq_length characters through the net and fetch gradient
-    loss, pplx, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
+    loss, pplx, dWxh, dWhh, dWhy, dbh, dby, hprev = \
+      lossFun(inputs, targets, hprev)
     smooth_loss = smooth_loss * 0.999 + loss * 0.001
         
     # perform parameter update
-    for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], [dWxh, dWhh, dWhy, dbh, dby], [mWxh, mWhh, mWhy, mbh, mby]):
+    for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], 
+                                  [dWxh, dWhh, dWhy, dbh, dby], 
+                                  [mWxh, mWhh, mWhy, mbh, mby]):
       ## adagrad
       #mem = (decay_rate * mem) + (1.0 - decay_rate) * (dparam*dparam)
       ## rmsprop
@@ -174,9 +180,12 @@ if __name__ == '__main__':
 
     # print learning
     if n % sample_freq == 0:
-      print 'epoch: %d(%d/%d), iter %d, loss: %f, smooth_loss: %f, pplx: %f' % (cum_p / data_size, cum_p, data_size, n, loss, smooth_loss, pplx)
+      print 'epoch: %d(%d/%d), iter %d, loss: %f, smooth_loss: %f, pplx: %f' % \
+        (cum_p / data_size, cum_p, data_size, n, loss, smooth_loss, pplx)
       dump_filename = 'models/min_char_rnn_iter%08d_loss%.4f.mat' % (n, smooth_loss)
-      sio.savemat(dump_filename, {'p': p, 'hprev': hprev, 'Wxh': Wxh, 'Whh': Whh, 'Why': Why, 'bh': bh, 'by': by, 'mWxh': mWxh, 'mWhh': mWhh, 'mWhy': mWhy, 'mbh': mbh, 'mby': mby})
+      sio.savemat(dump_filename, 
+        {'p': p, 'hprev': hprev, 'Wxh': Wxh, 'Whh': Whh, 'Why': Why, 'bh': bh, 'by': by, 
+        'mWxh': mWxh, 'mWhh': mWhh, 'mWhy': mWhy, 'mbh': mbh, 'mby': mby})
       print 'Dump: %s' % dump_filename
 
     p += seq_length # move data pointer
