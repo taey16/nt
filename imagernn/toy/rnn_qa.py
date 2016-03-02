@@ -54,7 +54,8 @@ if __name__ == '__main__':
   seq_length_sample = 2048
 
   model = sio.loadmat(sys.argv[1])
-  p, _, Wxh, Whh, Why, bh, by = model['p'], model['hprev'], model['Wxh'], model['Whh'], model['Why'], model['bh'], model['by']
+  p, _, Wxh, Whh, Why, bh, by = \
+    model['p'], model['hprev'], model['Wxh'], model['Whh'], model['Why'], model['bh'], model['by']
   inputs = [char_to_ix[ch] for ch in data[1:p]]
   hidden_size = Whh.shape[0]
 
