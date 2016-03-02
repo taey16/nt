@@ -139,7 +139,7 @@ if __name__ == '__main__':
   mbh, mby = np.zeros_like(bh), np.zeros_like(by)
 
   n, p, cum_p = 0, 0, 0
-  sample_freq = 800
+  sample_freq = 50
 
   # compute loss (loss at iter. 0)
   smooth_loss = -np.log(1.0/vocab_size)*seq_length
@@ -182,7 +182,8 @@ if __name__ == '__main__':
     if n % sample_freq == 0:
       print 'epoch: %d(%d/%d), iter %d, loss: %f, smooth_loss: %f, pplx: %f' % \
         (cum_p / data_size, cum_p, data_size, n, loss, smooth_loss, pplx)
-      dump_filename = 'models/min_char_rnn_iter%08d_loss%.4f.mat' % (n, smooth_loss)
+      #dump_filename = 'models/min_char_rnn_iter%08d_loss%.4f.mat' % (n, smooth_loss)
+      dump_filename = 'models/min_char_rnn.mat'
       sio.savemat(dump_filename, 
         {'p': p, 'hprev': hprev, 'Wxh': Wxh, 'Whh': Whh, 'Why': Why, 'bh': bh, 'by': by, 
         'mWxh': mWxh, 'mWhh': mWhh, 'mWhy': mWhy, 'mbh': mbh, 'mby': mby})
